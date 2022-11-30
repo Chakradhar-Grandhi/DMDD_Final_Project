@@ -5,10 +5,10 @@ declare
 begin
     select count(*) 
     INTO IS_TRUE
-    from user_tables where table_name='STATE';
+    from user_tables where table_name='VOTES';
     IF IS_TRUE > 0
     THEN
-    EXECUTE IMMEDIATE 'DROP TABLE STATE';
+    EXECUTE IMMEDIATE 'DROP TABLE VOTES';
     END IF;
 END;
 /
@@ -17,39 +17,13 @@ declare
 begin
     select count(*) 
     INTO IS_TRUE
-    from user_tables where table_name='PARTY';
+    from user_tables where table_name='VOTER';
     IF IS_TRUE > 0
     THEN
-    EXECUTE IMMEDIATE 'DROP TABLE PARTY';
+    EXECUTE IMMEDIATE 'DROP TABLE VOTER';
     END IF;
 END;
 /
-
-declare
-    is_true number;
-begin
-    select count(*) 
-    INTO IS_TRUE
-    from user_tables where table_name='CONSTITUENCY';
-    IF IS_TRUE > 0
-    THEN
-    EXECUTE IMMEDIATE 'DROP TABLE CONSTITUENCY';
-    END IF;
-END;
-/
-declare
-    is_true number;
-begin
-    select count(*) 
-    INTO IS_TRUE
-    from user_tables where table_name='PEOPLE';
-    IF IS_TRUE > 0
-    THEN
-    EXECUTE IMMEDIATE 'DROP TABLE PEOPLE';
-    END IF;
-END;
-/
-
 declare
     is_true number;
 begin
@@ -74,9 +48,57 @@ begin
     END IF;
 END;
 /
+declare
+    is_true number;
+begin
+    select count(*) 
+    INTO IS_TRUE
+    from user_tables where table_name='PEOPLE';
+    IF IS_TRUE > 0
+    THEN
+    EXECUTE IMMEDIATE 'DROP TABLE PEOPLE';
+    END IF;
+END;
+/
+declare
+    is_true number;
+begin
+    select count(*) 
+    INTO IS_TRUE
+    from user_tables where table_name='CONSTITUENCY';
+    IF IS_TRUE > 0
+    THEN
+    EXECUTE IMMEDIATE 'DROP TABLE CONSTITUENCY';
+    END IF;
+END;
+/
+declare
+    is_true number;
+begin
+    select count(*) 
+    INTO IS_TRUE
+    from user_tables where table_name='STATE';
+    IF IS_TRUE > 0
+    THEN
+    EXECUTE IMMEDIATE 'DROP TABLE STATE';
+    END IF;
+END;
+/
+declare
+    is_true number;
+begin
+    select count(*) 
+    INTO IS_TRUE
+    from user_tables where table_name='PARTY';
+    IF IS_TRUE > 0
+    THEN
+    EXECUTE IMMEDIATE 'DROP TABLE PARTY';
+    END IF;
+END;
+/
 
-
-
+--all tables dropped if already there . 
+--> creating tables in order 
 CREATE TABLE STATE(
 STATE_ID INT NOT NULL PRIMARY KEY, 
 STATE_NAME VARCHAR(255) UNIQUE NOT NULL ); 
@@ -87,7 +109,6 @@ PARTY_NAME VARCHAR(255) UNIQUE NOT NULL ,
 PARTY_ADDRESS VARCHAR(255) UNIQUE NOT NULL, 
 CONTACT_NUMBER VARCHAR(255) UNIQUE NOT NULL, 
 EMAIL VARCHAR(255) UNIQUE NOT NULL); 
-
 
 CREATE TABLE CONSTITUENCY(
 CONSTITUENCY_ID INT NOT NULL PRIMARY KEY, 
@@ -126,12 +147,25 @@ POS_START TIMESTAMP NOT NULL,
 POS_END TIMESTAMP NOT NULL, 
 CANDIDATE_ID INT NOT NULL REFERENCES CANDIDATE(CANDIDATE_ID)); 
 
+CREATE TABLE VOTER(
+VOTER_ID INT NOT NULL PRIMARY KEY, 
+ISSUE_DATE DATE NOT NULL, 
+EXPIRY_DATE DATE NOT NULL, 
+U_ID INT NOT NULL REFERENCES PEOPLE(U_ID)) ;
+
+CREATE TABLE VOTES(
+VOTER_ID INT NOT NULL PRIMARY KEY REFERENCES VOTER(VOTER_ID), 
+CANDIDATE_ID INT NOT NULL REFERENCES CANDIDATE(CANDIDATE_ID), 
+VOTE_TIME TIMESTAMP NOT NULL);
 
 
 
 
 --> Data Insertion
 
+
+	
+	
 Insert into STATE Values(1,'TELANGANA')	;
 Insert into STATE Values(2,'MAHARASTRA');
 
@@ -206,6 +240,7 @@ Insert into PEOPLE Values (57,'Krupa','Shah',57,'	30-Jul-1965	','BHADRACHALAM','
 Insert into PEOPLE Values (58,'Fenil','Jain',56,'	9-Feb-1966	','TARNAKA','6778978978','fenil@gmail.com',NULL,1,'Shyam','M');
 Insert into PEOPLE Values (59,'Ketaki','Pathak',56,'	6-Jun-1966	','ILLENDU','8968679787','ketaki@gmail.com',null,4,'Nakul','F');
 
+
 insert into CANDIDATE values(46,1,1,12,'	3-May-10	','NONE');
 insert into CANDIDATE values(4,2,2,11,'	8-Dec-10	','SHIVSENA');
 insert into CANDIDATE values(13,3,3,9,'	21-Jan-13	','NONE');
@@ -230,6 +265,64 @@ Insert into POSITION values(4,9,'KHAMMAN_MLA','UNDERSTAND THE PROBLEMS FOR PEOPL
 
 
 
+Insert into VOTER values (1,'7-JUN-19','7-JUN-24',29);
+Insert into VOTER values (2,'7-JUN-19','7-JUN-24',24);
+Insert into VOTER values (3,'7-JUN-19','7-JUN-24',13);
+Insert into VOTER values (4,'7-JUN-19','7-JUN-24',38);
+Insert into VOTER values (5,'7-JUN-19','7-JUN-24',3);
+Insert into VOTER values (6,'7-JUN-19','7-JUN-24',52);
+Insert into VOTER values (7,'7-JUN-19','7-JUN-24',16);
+Insert into VOTER values (8,'7-JUN-19','7-JUN-24',45);
+Insert into VOTER values (9,'7-JUN-19','7-JUN-24',54);
+Insert into VOTER values (10,'7-JUN-19','7-JUN-24',11);
+Insert into VOTER values (11,'7-JUN-19','7-JUN-24',59);
+Insert into VOTER values (12,'7-JUN-19','7-JUN-24',15);
+Insert into VOTER values (13,'7-JUN-19','7-JUN-24',23);
+Insert into VOTER values (14,'7-JUN-19','7-JUN-24',35);
+Insert into VOTER values (15,'7-JUN-19','7-JUN-24',2);
+Insert into VOTER values (16,'7-JUN-19','7-JUN-24',27);
+Insert into VOTER values (17,'7-JUN-19','7-JUN-24',37);
+Insert into VOTER values (18,'7-JUN-19','7-JUN-24',41);
+Insert into VOTER values (19,'7-JUN-19','7-JUN-24',55);
+Insert into VOTER values (20,'7-JUN-19','7-JUN-24',1);
+Insert into VOTER values (21,'7-JUN-19','7-JUN-24',19);
+Insert into VOTER values (22,'7-JUN-19','7-JUN-24',53);
+Insert into VOTER values (23,'7-JUN-19','7-JUN-24',33);
+Insert into VOTER values (24,'7-JUN-19','7-JUN-24',51);
+Insert into VOTER values (25,'7-JUN-19','7-JUN-24',7);
+Insert into VOTER values (26,'7-JUN-19','7-JUN-24',43);
+Insert into VOTER values (27,'7-JUN-19','7-JUN-24',8);
+Insert into VOTER values (28,'7-JUN-19','7-JUN-24',46);
+Insert into VOTER values (29,'7-JUN-19','7-JUN-24',56);
+Insert into VOTER values (30,'7-JUN-19','7-JUN-24',30);
+Insert into VOTER values (31,'7-JUN-19','7-JUN-24',20);
+Insert into VOTER values (32,'7-JUN-19','7-JUN-24',10);
+Insert into VOTER values (33,'7-JUN-19','7-JUN-24',50);
+Insert into VOTER values (34,'7-JUN-19','7-JUN-24',40);
+Insert into VOTER values (35,'7-JUN-19','7-JUN-24',44);
+Insert into VOTER values (36,'7-JUN-19','7-JUN-24',32);
+Insert into VOTER values (37,'7-JUN-19','7-JUN-24',17);
+Insert into VOTER values (38,'7-JUN-19','7-JUN-24',28);
+Insert into VOTER values (39,'7-JUN-19','7-JUN-24',42);
+Insert into VOTER values (40,'7-JUN-19','7-JUN-24',6);
 
-
-
+Insert into VOTES values (15,1,'11-NOV-2022  9:00:00 AM');
+Insert into VOTES values (36,7,'11-NOV-2022  10:00:00 AM');
+Insert into VOTES values (27,2,'11-NOV-2022  9:15:00 AM');
+Insert into VOTES values (5,9,'11-NOV-2022  11:00:00 AM');
+Insert into VOTES values (25,4,'11-NOV-2022  10:00:00 AM');
+Insert into VOTES values (34,10,'11-NOV-2022  3:15:00 PM');
+Insert into VOTES values (12,6,'11-NOV-2022  2:14:00 PM');
+Insert into VOTES values (16,8,'11-NOV-2022  11:40:00 AM');
+Insert into VOTES values (38,4,'11-NOV-2022  1:00:00 PM');
+Insert into VOTES values (6,7,'11-NOV-2022  8:00:00 AM');
+Insert into VOTES values (31,3,'11-NOV-2022  9:15:00 AM');
+Insert into VOTES values (23,9,'11-NOV-2022  11:00:00 AM');
+Insert into VOTES values (18,10,'11-NOV-2022  1:00:00 PM');
+Insert into VOTES values (19,8,'11-NOV-2022  3:15:00 PM');
+Insert into VOTES values (1,9,'11-NOV-2022  2:14:00 PM');
+Insert into VOTES values (17,10,'11-NOV-2022  10:00:00 AM');
+Insert into VOTES values (2,1,'11-NOV-2022  3:15:00 PM');
+Insert into VOTES values (9,10,'11-NOV-2022  2:14:00 PM');
+Insert into VOTES values (14,7,'11-NOV-2022  11:40:00 AM');
+Insert into VOTES values (30,3,'11-NOV-2022  11:00:00 AM');
